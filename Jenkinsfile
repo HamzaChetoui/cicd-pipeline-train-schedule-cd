@@ -20,7 +20,6 @@ pipeline {
                         publishers: [
                             sshPublisherDesc(
                                 configName: 'stage',
-                             
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: 'dist/trainSchedule.zip',
