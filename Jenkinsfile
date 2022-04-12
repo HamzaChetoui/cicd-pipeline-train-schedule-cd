@@ -23,8 +23,8 @@ pipeline {
                 verbose: true,
                 transfers: [
                   sshTransfer(
-                    sourceFiles: "/dist/trainSchedule.zip",
-                    removePrefix: "/dist",
+                    sourceFiles: "dist/trainSchedule.zip",
+                    removePrefix: "dist",
                     remoteDirectory: "/tmp",
                     execCommand: "unzip /tmp/trainSchedule.zip -d /opt/train-schedule && echo $PASS | sudo -S /usr/bin/systemctl start train-schedule"
                   )
