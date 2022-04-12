@@ -4,7 +4,7 @@ pipeline {
     stage ('build'){
       steps {
         echo 'Build project'
-        sh 'gradlew build'
+        sh './gradlew build'
         archive 'dist/trainSchedule.zip'
       }
     }
