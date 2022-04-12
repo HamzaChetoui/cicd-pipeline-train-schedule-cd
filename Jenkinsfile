@@ -14,26 +14,28 @@ pipeline {
         branch 'master' 
       }
       steps {
-        sshPublisher(
-          continueOnError: false, failOnError: true,
-          publishers: [
-            sshPublisherDesc(
-              configName: "staging",
-              verbose: true,
-              transfers: [
-                sshTransfer(
-                  sourceFiles: "/dist/trainSchedule.zip",
-                  removePrefix: "/dist",
-                  remoteDirectory: "/tmp",
-                  execCommand: "sudo /usr/bin/systemctl stop train-schedule && rm -rf /opt/train-schedule/* && unzip /tmp/trainSchedule.zip -d /opt/train-schedule && sudo /usr/bin/systemctl start train-schedule"
-                )
-              ]
-            )
-          ]
-        )
+        withCredentials([usernamePassword(credentialsId: 'server_credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+          sshPublisher(
+            continueOnError: false, failOnError: true,
+            publishers: [
+              sshPublisherDesc(
+                configName: "staging",
+                verbose: true,
+                transfers: [
+                  sshTransfer(
+                    sourceFiles: "/dist/trainSchedule.zip",
+                    removePrefix: "/dist",
+                    remoteDirectory: "/tmp",
+                    execCommand: "echo "$PASS" | sudo -S /usr/bin/systemctl stop train-schedule && rm -rf /opt/train-schedule/* && unzip /tmp/trainSchedule.zip -d /opt/train-schedule && echo "$PASS" | sudo -S /usr/bin/systemctl start train-schedule"
+                  )
+                ]
+              )
+            ]
+          )
+        )  
       }
     }
-    
+    /*
     stage ('production deploy') {
       when {
         branch 'master' 
@@ -60,5 +62,6 @@ pipeline {
         )
       }
     }
+    */
   }
 }
